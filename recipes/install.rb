@@ -17,12 +17,24 @@
 # limitations under the License.
 #
 
-include_recipe "haproxy::install"
+group "haproxy" do
+  gid 2500
+end
 
-template "#{node['haproxy']['dir']}/haproxy.cfg" do
-  source "haproxy.cfg.erb"
-  owner "root"
-  group "root"
-  mode 0644
-  notifies :restart, "service[haproxy]"
+user "haproxy" do
+  comment "HAProxy User"
+  gid "haproxy"
+  system true
+  home "/home/haproxy"
+  shell "/bin/false"
+  supports :manage_home  => true
+end
+
+package "haproxy" do
+  action :install
+end
+
+service "haproxy" do
+  supports :restart => true, :status => true, :reload => true
+  action [:enable, :start]
 end

@@ -17,13 +17,28 @@
 # limitations under the License.
 #
 
+case node['platform']
+when "debian","ubuntu"
+  default['haproxy']['dir'] = "/etc/haproxy"
+when "smartos"
+  default['haproxy']['dir'] = "/opt/local/etc"
+else
+  default['haproxy']['dir'] = "/etc/haproxy"
+end
+
+
+default['haproxy']['connect_timeout'] = "10000"
+default['haproxy']['server_timeout'] = "200000"
+default['haproxy']['client_timeout'] = "200000"
+default['haproxy']['maxconn'] = "4096"
 default['haproxy']['incoming_port'] = "80"
 default['haproxy']['member_port'] = "8080"
 default['haproxy']['enable_admin'] = true
-default['haproxy']['app_server_role'] = "webserver"
 default['haproxy']['balance_algorithm'] = "roundrobin"
+default['haproxy']['member_check_inter'] = "2000"
+default['haproxy']['member_weight'] = "1"
+default['haproxy']['member_fall'] = "2"
+default['haproxy']['member_rise'] = "5"
 default['haproxy']['member_max_connections'] = "100"
-default['haproxy']['x_forwarded_for'] = false
-default['haproxy']['enable_ssl'] = false
-default['haproxy']['ssl_incoming_port'] = "443"
-default['haproxy']['ssl_member_port'] = "8443"
+default['haproxy']['stats_uri'] = "/haproxy/stats"
+default['haproxy']['stats_auth'] = "admin:p455w0rd!"
